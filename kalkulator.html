@@ -1,59 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    
+        <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
+
 <body>
+    <h1>Simple Calculator</h1>
+    <h2>Using JavaScript</h2>
     <table>
-        <tr><td colspan="3"><input id="tampilan" type="text" disabled value="0"></td></tr>
         <tr>
-            <td><button id="tujuh" onclick="clickNumber(7)">7</button></td>
-            <td><button id="delapan" onclick="clickNumber(8)">8</button></td>
-            <td><button id="sembilan" onclick="clickNumber(9)">9</button></td>
-            <td><button id="bagi">/</button></td>
+            <td colspan="4"><input id="tampilan" type="text" disabled value="0"></td>
         </tr>
         <tr>
-            <td><button id="empat" onclick="clickNumber(4)">4</button></td>
-            <td><button id="lima" onclick="clickNumber(5)">5</button></td>
-            <td><button id="enam" onclick="clickNumber(6)">6</button></td>
-            <td><button id="kali">X</button></td>
+            <td><button id="clear" onclick="reset()">C</button></td>
+            <td><button id="bagi" onclick="clickOperator('root')">&#8730;</button></td>
+            <td><button id="pangkat" onclick="clickOperator('x^2')">x<sup>2</sup></button></td>
+            <td><button id="seper" onclick="clickOperator('1/x')"><sup>1</sup>/<sub>x</sub></button></td>
         </tr>
         <tr>
-            <td><button id="satu" onclick="clickNumber(1)">1</button></td>
-            <td><button id="dua" onclick="clickNumber(2)">2</button></td>
-            <td><button id="tiga" onclick="clickNumber(3)">3</button></td>
-            <td><button id="kurang">-</button></td>
+            <td><button id="tujuh" onclick="clickNumber('7')">7</button></td>
+            <td><button id="delapan" onclick="clickNumber('8')">8</button></td>
+            <td><button id="sembilan" onclick="clickNumber('9')">9</button></td>
+            <td><button id="bagi" onclick="clickOperator('/')">/</button></td>
         </tr>
         <tr>
-            <td><button id="clear">C</button></td>
-            <td><button id="titik">.</button></td>
-            <td><button id="nol">0</button></td>
+            <td><button id="empat" onclick="clickNumber('4')">4</button></td>
+            <td><button id="lima" onclick="clickNumber('5')">5</button></td>
+            <td><button id="enam" onclick="clickNumber('6')">6</button></td>
+            <td><button id="kali" onclick="clickOperator('x')">X</button></td>
+        </tr>
+        <tr>
+            <td><button id="satu" onclick="clickNumber('1')">1</button></td>
+            <td><button id="dua" onclick="clickNumber('2')">2</button></td>
+            <td><button id="tiga" onclick="clickNumber('3')">3</button></td>
+            <td><button id="kurang" onclick="clickOperator('-')">-</button></td>
+        </tr>
+        <tr>
+            <td><button id="titik" onclick="clickNumber('.')">.</button></td>
+            <td><button id="nol" onclick="clickNumber('0')">0</button></td>
             <td><button id="tambah" onclick="clickOperator('+')">+</button></td>
+            <td><button id="hitung" onclick="result()">=</button></td>
         </tr>
     </table>
 
     <script>
-        let operator=""
-        function clickNumber(num) {
-            let numBefore = document.getElementById('tampilan').value
-            switch (operator){
-                case "+":
-                    num = num + parseInt(numBefore);
-                    operator = "";
+        var currNumber = "";
+        var lastNumber = "";
+        var operator_temp = "";
+        var hasil = "";
+
+        function clickNumber(angka) {
+            if (hasil != "") {
+                currNumber = angka;
+                hasil = "";
+            } else {
+                currNumber = currNumber + angka;
+            }
+            document.getElementById('tampilan').value = currNumber;
+        }
+
+        function clickOperator(operator) {
+            if(hasil==""){
+                lastNumber = currNumber;
+            }else{
+                lastNumber = document.getElementById('tampilan').value;
+            }
+            
+            currNumber = "";
+            operator_temp = operator;
+
+            let lastNumberParsed = parseFloat(lastNumber);
+            let currNumberParsed = parseFloat(currNumber);
+
+            switch (operator_temp) {
+                case "root":
+                    hasil = Math.sqrt(lastNumberParsed);
+                    document.getElementById('tampilan').value = hasil;
+                    break;
+
+                    case "x^2":
+                    hasil = Math.pow(lastNumberParsed,2);
+                    document.getElementById('tampilan').value = hasil;
+                    break;
+
+                    case "1/x":
+                    hasil = 1/lastNumberParsed;
+                    document.getElementById('tampilan').value = hasil;
+                    break;
+            
+                default:
                     break;
             }
-            document.getElementById('tampilan').value = num;
         }
-        function clickOperator(operate) {
-            operator = operate;
+
+        function result() {
+            let lastNumberParsed = parseFloat(lastNumber);
+            let currNumberParsed = parseFloat(currNumber);
+
+            switch (operator_temp) {
+                case "+":
+                    hasil = lastNumberParsed + currNumberParsed
+                    document.getElementById('tampilan').value = hasil;
+                    break;
+
+                case "-":
+                    hasil = lastNumberParsed - currNumberParsed
+                    document.getElementById('tampilan').value = hasil;
+                    break;
+
+                case "x":
+                    hasil = lastNumberParsed * currNumberParsed
+                    document.getElementById('tampilan').value = hasil;
+                    break;
+
+                case "/":
+                    if (currNumberParsed == 0) {
+                        hasil = "Cannot divide by zero"
+                    } else {
+                        hasil = lastNumberParsed / currNumberParsed
+                    }
+                    document.getElementById('tampilan').value = hasil;
+                    break;
+
+                default:
+                    hasil = parseInt(currNumber);
+                    break;
+            }
+        }
+
+        function reset() {
+            currNumber = "";
+            lastNumber = "";
+            operator_temp = "";
+            hasil = "";
+            document.getElementById('tampilan').value = '0';
         }
     </script>
-
 </body>
+
 </html>
