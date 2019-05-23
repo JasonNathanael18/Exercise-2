@@ -91,7 +91,12 @@
                     break;
 
                     case "1/x":
-                    hasil = 1/lastNumberParsed;
+
+                    if (lastNumberParsed == 0 || lastNumber == "") {
+                        hasil = "Cannot divide by zero";
+                    } else {
+                        hasil = 1/lastNumberParsed;
+                    }
                     document.getElementById('tampilan').value = hasil;
                     break;
             
@@ -122,9 +127,9 @@
 
                 case "/":
                     if (currNumberParsed == 0) {
-                        hasil = "Cannot divide by zero"
+                        hasil = "Cannot divide by zero";
                     } else {
-                        hasil = lastNumberParsed / currNumberParsed
+                        hasil = lastNumberParsed / currNumberParsed;
                     }
                     document.getElementById('tampilan').value = hasil;
                     break;
